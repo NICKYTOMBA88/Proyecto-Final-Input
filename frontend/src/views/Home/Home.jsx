@@ -63,6 +63,7 @@ const Home = () => {
 
   return (
     <Layout>
+      <input type="text" placeholder="Buscar Producto" ></input>
       <h1>Lista de productos</h1>
       {user && <p>Bienvenido, {user.email}</p>}
       {error && <>
