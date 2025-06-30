@@ -3,18 +3,20 @@ import { Layout } from "../../components/Layout"
 import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { FormUpdate } from "../../components/FormUpdate"
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
   const [products, setProducts] = useState([])
   const [error, setError] = useState(null)
   const [isEditing, setIsEditing] = useState(null)
   const [productEditing, setProductEditing] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("")
 
   const { user, logout, token } = useAuth()
 
   const fetchingProducts = async () => {
     try {
-      const response = await fetch("http://localhost:1234/api/products")
+      const response = await fetch(`${API_URL}/products`)
 
       if (!response.ok) {
         setError("Sesión terminada, vuelve a loguearte.")
@@ -29,6 +31,24 @@ const Home = () => {
       setError(error.message)
     }
   }
+  const handleSearch = async (e) => {
+    const value = e.target.value
+    setSearchTerm(value)
+
+    if (value.trim() === "") {
+      fetchingProducts()
+      return
+    }
+
+    try {
+      const response = await fetch(`http://localhost:1234/api/products/search?name=${value}`)
+      if (!response.ok) throw new Error("Error al buscar productos")
+      const data = await response.json()
+      setProducts(data.data)
+    } catch (error) {
+      setError("No se pudo realizar la búsqueda")
+    }
+  }
 
   useEffect(() => {
     fetchingProducts()
@@ -37,7 +57,7 @@ const Home = () => {
   const handleDelete = async (product) => {
     if (confirm("Esta seguro que quieres borrar el producto?")) {
       try {
-        const response = await fetch(`http://localhost:1234/api/products/${product._id}`, {
+        const response = await fetch(`${API_URL}/products/${product._id}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` }
         })
@@ -63,7 +83,13 @@ const Home = () => {
 
   return (
     <Layout>
-      <input type="text" placeholder="Buscar Producto" ></input>
+      <input
+        type="text"
+        placeholder="Buscar Producto"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+
       <h1>Lista de productos</h1>
       {user && <p>Bienvenido, {user.email}</p>}
       {error && <>

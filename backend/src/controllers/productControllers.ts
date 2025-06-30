@@ -89,18 +89,23 @@ const updateProduct = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
-const searchProducts = async (req: Request, res: Response) => {
-  const { q } = req.query
-
+const searchProducts = async (req: Request, res: Response): Promise<any> => {
   try {
+    const { name } = req.query
+
+    if (!name) {
+      return res.status(400).json({ error: "Falta el parámetro 'name'" })
+    }
+
     const products = await Product.find({
-      name: { $regex: q, $options: "i" }
+      name: { $regex: name, $options: "i" }
     })
 
     res.json({ data: products })
   } catch (error) {
+    console.error("Error en searchProducts:", error)
     res.status(500).json({ error: "Error en la búsqueda de productos" })
   }
 }
 
-export { getAllProducts, createProduct, deleteProduct, updateProduct }
+export { getAllProducts, createProduct, deleteProduct, updateProduct, searchProducts }

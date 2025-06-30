@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express"
 import { connectDb } from "./config/connectDb"
 import { authRouter } from "./routes/authRouter"
 import { productRouter } from "./routes/productRouter"
+
 import cors from "cors"
 
 process.loadEnvFile()

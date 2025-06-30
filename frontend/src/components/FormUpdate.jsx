@@ -6,6 +6,8 @@ const FormUpdate = ({ product, handleCancelEditing, fetchingProducts }) => {
   const [price, setPrice] = useState(product.price)
   const [category, setCategory] = useState(product.category)
   const { token } = useAuth()
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const handleName = (e) => {
     setName(e.target.value)
@@ -24,7 +26,7 @@ const FormUpdate = ({ product, handleCancelEditing, fetchingProducts }) => {
     // Logica para actualizar un producto
     // fetch al backend
 
-    const response = await fetch(`http://localhost:1234/api/products/${product._id}`, {
+    const response = await fetch(`${API_URL}/products/${product._id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
