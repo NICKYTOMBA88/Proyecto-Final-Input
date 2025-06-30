@@ -21,7 +21,7 @@ const Home = () => {
       if (!response.ok) {
         setError("Sesión terminada, vuelve a loguearte.")
         logout()
-        // continuar controlando el home como ruta privada
+
         throw new Error("Falló el fetch :(")
       }
       const dataProducts = await response.json()
