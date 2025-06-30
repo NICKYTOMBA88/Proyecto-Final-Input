@@ -41,7 +41,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:1234/api/products/search?name=${value}`)
+      const response = await fetch(`${API_URL}/products/search?name=${value}`)
       if (!response.ok) throw new Error("Error al buscar productos")
       const data = await response.json()
       setProducts(data.data)
